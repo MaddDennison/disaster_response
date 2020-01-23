@@ -32,12 +32,13 @@ def load_data(database_filepath):
     Returns:
     Values for X and y to be loaded into the model.
     '''
-
-    engine = create_engine('sqlite:///disaster_response_tweets.db')
+    db_str ='sqlite:///'+ database_filepath
+    engine = create_engine(db_str)
     df = sql_DF = pd.read_sql_table('categorized_tweets', con=engine)
     X = df['message'].values
     y = df.iloc[:,4:].values
-    return X,y
+    category_names = list(df.iloc[:0, 4:])
+    return X,y,category_names
 
 def tokenize(text):
     '''
@@ -60,8 +61,9 @@ def tokenize(text):
     for tok in tokens:
         # lemmatize, normalize case, and remove leading/trailing white space
         clean_tok = lemmatizer.lemmatize(tok).lower().strip()
+        clean_tokens.append(clean_tok)
 
-    clean_tokens.append(clean_tok)
+
     return clean_tokens
 
 
@@ -98,8 +100,10 @@ def evaluate_model(model, X_test, Y_test, category_names):
     '''
 
     #train classifier
-    pipeline.fit(X_train, y_train)
-
+    model.fit(X_test, Y_test)
+    for i in range(len(categories)):
+        print(category_names[i])
+        print(classification_report(y_test[i], y_pred[i]))
 
 
 def save_model(model, model_filepath):
@@ -113,8 +117,8 @@ def save_model(model, model_filepath):
     Returns:
     None
     '''
-    save_classifier = open("classifier.pkl", 'wb')
-    pickle.dump(pipeline, save_classifier)
+    save_classifier = open(model_filepath, 'wb')
+    pickle.dump(model, save_classifier)
     save_classifier.close()
     return
 
@@ -123,9 +127,9 @@ def main():
     This function runs the applicaiton.
     '''
     if len(sys.argv) == 3:
-        'sqlite:///disaster_response_tweets.db', "/models/classifier.pkl" = sys.argv[1:]
-        print('Loading data...\n    DATABASE: {}'.format('sqlite:///disaster_response_tweets.db'))
-        X, Y, category_names = load_data('sqlite:///disaster_response_tweets.db')
+        database_filepath, model_filepath = sys.argv[1:]
+        print('Loading data...\n    DATABASE: {}'.format(database_filepath))
+        X, Y, category_names = load_data(database_filepath)
         X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
 
         print('Building model...')
@@ -135,10 +139,10 @@ def main():
         model.fit(X_train, Y_train)
 
         print('Evaluating model...')
-        evaluate_model(pipeline, X_test, Y_test, category_names)
+        evaluate_model(model, X_test, Y_test, category_names)
 
-        print('Saving model...\n    MODEL: {}'.format("/models/classifier.pkl"))
-        save_model(pipeline, "/models/classifier.pkl")
+        print('Saving model...\n    MODEL: {}'.format(model_filepath))
+        save_model(model, model_filepath)
 
         print('Trained model saved!')
 
