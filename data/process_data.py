@@ -14,9 +14,9 @@ def load_data(messages_filepath, categories_filepath):
     Pandas dataframe.
     '''
     # load messages dataset
-    messages = pd.read_csv('messages.csv')
+    messages = pd.read_csv(messages_filepath)
     # load categories dataset
-    categories = pd.read_csv('categories.csv')
+    categories = pd.read_csv(categories_filepath)
     # merge datasets
     df = messages.merge(categories, left_on='id', right_on='id')
     return df
@@ -75,10 +75,9 @@ def save_data(df, database_filename):
     Returns:
     None
     '''
-    engine = create_engine('sqlite:///disaster_response_tweets.db')
+    db_str ='sqlite:///'+ database_filename
+    engine = create_engine(db_str)
     df.to_sql('categorized_tweets', engine, index=False)
-    categories.to_sql('tweet_categories', engine, index=False)
-    #I saved a catagories table in case I needed it later.
     return
 
 
