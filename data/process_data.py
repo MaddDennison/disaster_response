@@ -50,9 +50,10 @@ def clean_data(df):
 def save_data(df, database_filename):
     '''
     '''
-    engine = create_engine('sqlite:///disaster_response.db')
+    engine = create_engine('sqlite:///disaster_response_tweets.db')
     df.to_sql('categorized_tweets', engine, index=False)
     categories.to_sql('tweet_categories', engine, index=False)
+    #I saved a catagories table in case I needed it later.
     return
 
 
