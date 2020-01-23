@@ -5,8 +5,13 @@ from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
     '''
+    Load the data to be transformed.
 
+    Args:
+    File path to csv files.
 
+    Returns:
+    Pandas dataframe.
     '''
     # load messages dataset
     messages = pd.read_csv('messages.csv')
@@ -19,6 +24,18 @@ def load_data(messages_filepath, categories_filepath):
 
 def clean_data(df):
     '''
+    Creates a catagories dataframe from the one provided.
+    Creates appropriate column names from the values in the cataogry cells.
+    Iterates through the catagories to convert the strings to numeric values.
+    Drops the original 'Catagories' column.
+    merges the new catagory dataframe back with the messages one.
+    Drops duplicate rows.
+
+    Args:
+    Dataframe to be cleaned.
+
+    Returns:
+    Cleaned dataframe.
     '''
     #a dataframe of the 36 individual category columns
     categories = df['categories'].str.split(';', expand=True)
@@ -49,6 +66,14 @@ def clean_data(df):
 
 def save_data(df, database_filename):
     '''
+    Saves the dataframe to a SQLite db.
+
+    Args:
+    The datafame to be saved.
+    The path to save the db to.
+
+    Returns:
+    None
     '''
     engine = create_engine('sqlite:///disaster_response_tweets.db')
     df.to_sql('categorized_tweets', engine, index=False)
@@ -59,6 +84,7 @@ def save_data(df, database_filename):
 
 def main():
     '''
+    The script to run the entire ETL pipeline.
     '''
 
     if len(sys.argv) == 4:
