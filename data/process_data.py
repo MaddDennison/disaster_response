@@ -1,6 +1,7 @@
 import sys
 import pandas as pd
 import numpy as np
+from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
     '''
@@ -49,7 +50,10 @@ def clean_data(df):
 def save_data(df, database_filename):
     '''
     '''
-    pass
+    engine = create_engine('sqlite:///disaster_response.db')
+    df.to_sql('categorized_tweets', engine, index=False)
+    categories.to_sql('tweet_categories', engine, index=False)
+    return
 
 
 def main():
