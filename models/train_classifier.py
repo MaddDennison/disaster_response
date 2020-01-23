@@ -1,5 +1,26 @@
 import sys
+import nltk
+nltk.download(['punkt', 'wordnet'])
 
+import re
+import numpy as np
+import pandas as pd
+import sqlalchemy
+from sqlalchemy import create_engine
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+from sklearn.multioutput import MultiOutputClassifier
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import f1_score
+from sklearn.metrics import classification_report
+from sklearn import linear_model
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import GridSearchCV
+import pickle
 
 def load_data(database_filepath):
     '''
