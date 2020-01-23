@@ -102,9 +102,9 @@ def main():
     This function runs the applicaiton.
     '''
     if len(sys.argv) == 3:
-        database_filepath, model_filepath = sys.argv[1:]
-        print('Loading data...\n    DATABASE: {}'.format(database_filepath))
-        X, Y, category_names = load_data(database_filepath)
+        'sqlite:///disaster_response_tweets.db', "/models/classifier.pkl" = sys.argv[1:]
+        print('Loading data...\n    DATABASE: {}'.format('sqlite:///disaster_response_tweets.db'))
+        X, Y, category_names = load_data('sqlite:///disaster_response_tweets.db')
         X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
 
         print('Building model...')
@@ -114,10 +114,10 @@ def main():
         model.fit(X_train, Y_train)
 
         print('Evaluating model...')
-        evaluate_model(model, X_test, Y_test, category_names)
+        evaluate_model(pipeline, X_test, Y_test, category_names)
 
-        print('Saving model...\n    MODEL: {}'.format(model_filepath))
-        save_model(model, model_filepath)
+        print('Saving model...\n    MODEL: {}'.format("/models/classifier.pkl"))
+        save_model(pipeline, "/models/classifier.pkl")
 
         print('Trained model saved!')
 
