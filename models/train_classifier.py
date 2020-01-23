@@ -56,10 +56,10 @@ def build_model():
     The classifier to be used in evaluation.
     '''
     pipeline = Pipeline([
-                ('vect', CountVectorizer(tokenizer=tokenize)),
-                ('tfidf', TfidfTransformer()),
-                ('clf', MultiOutputClassifier(RandomForestClassifier())),
-            ])
+                    ('vect', CountVectorizer(tokenizer=tokenize, max_df=0.5, max_features=10000)),
+                    ('tfidf', TfidfTransformer()),
+                    ('clf', MultiOutputClassifier(RandomForestClassifier())),
+                ])
     return pipeline
 
 def evaluate_model(model, X_test, Y_test, category_names):
