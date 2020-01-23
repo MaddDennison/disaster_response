@@ -3,8 +3,13 @@ import sys
 
 def load_data(database_filepath):
     '''
+    Load the data to be
 
+    Args:
+    File path to sqlite database.
 
+    Returns:
+    Values for X and y to be loaded into the model.
     '''
 
     engine = create_engine('sqlite:///disaster_response_tweets.db')
@@ -15,7 +20,13 @@ def load_data(database_filepath):
 
 def tokenize(text):
     '''
+    Takes a document of text and tokenizes all the words.
 
+    Args:
+    A string of the content to be tokenized.
+
+    Returns:
+    A list of the clean tokens.
     '''
     #tokenize text
     tokens = word_tokenize(text)
@@ -35,7 +46,14 @@ def tokenize(text):
 
 def build_model():
     '''
+    This function sets up the ML pipeline and initializes the transformers
+    and classifier.
 
+    Args:
+    None
+
+    Returns:
+    The classifier to be used in evaluation.
     '''
     pipeline = Pipeline([
                 ('vect', CountVectorizer(tokenizer=tokenize)),
@@ -46,10 +64,18 @@ def build_model():
 
 def evaluate_model(model, X_test, Y_test, category_names):
     '''
+    Fits the data to the model.
 
+    Args:
+    The classifier to be fitted.
+    The X_test data.
+    The y_test data.
+    A list of the catagory names.
+
+    Returns:
+    A list of the clean tokens.
     '''
-    #train / test split
-    X_train, X_test, y_train, y_test = train_test_split(X, y)
+
     #train classifier
     pipeline.fit(X_train, y_train)
 
@@ -57,15 +83,23 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 def save_model(model, model_filepath):
     '''
+    Saves the classifer from the model.
 
+    Args:
+    The classifier model to be saved.
+    The path to save the file to.
+
+    Returns:
+    None
     '''
     save_classifier = open("classifier.pkl", 'wb')
     pickle.dump(pipeline, save_classifier)
     save_classifier.close()
-
+    return
 
 def main():
     '''
+    This function runs the applicaiton.
     '''
     if len(sys.argv) == 3:
         database_filepath, model_filepath = sys.argv[1:]
