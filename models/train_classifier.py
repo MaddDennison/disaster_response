@@ -101,7 +101,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
     #train classifier
     model.fit(X_test, Y_test)
-    for i in range(len(categories)):
+    for i in range(len(category_names)):
         print(category_names[i])
         print(classification_report(y_test[i], y_pred[i]))
 
