@@ -49,6 +49,7 @@ def index():
     msg_lengths = list(df['msg_len'])
 
 
+    genre_msg_length = df.groupby('genre').mean()['msg_len']
 
 
     # create visuals
@@ -115,19 +116,21 @@ def index():
         #Graph 4 ####################################################################################
          {
             'data': [
-                Bar(
-                    x=genre_names,
-                    y=genre_counts
+                Scatter(
+                    x=genre_counts,
+                    y=genre_msg_length,
+                    mode='markers',
+                    text=genre_names
                 )
             ],
 
             'layout': {
-                'title': 'Graph 4',
+                'title': 'Message length and count by genre',
                 'yaxis': {
-                    'title': "Y"
+                    'title': "Message Lengths"
                 },
                 'xaxis': {
-                    'title': "X"
+                    'title': "Message Counts"
                 }
             }
         },
