@@ -7,7 +7,7 @@ from nltk.tokenize import word_tokenize
 
 from flask import Flask
 from flask import render_template, request, jsonify
-from plotly.graph_objs import Bar
+from plotly.graph_objs import Bar, Pie, Scatter, Histogram
 from sklearn.externals import joblib
 from sqlalchemy import create_engine
 
@@ -39,14 +39,81 @@ model = joblib.load("../models/classifier.pkl")
 def index():
 
     # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
 
+    cat_names = list(df.iloc[:0, 4:])
+    cat_counts = df[cat_names].sum()
+
+    df['msg_len'] = df.message.str.len()
+    msg_lengths = list(df['msg_len'])
+
+
+
+
     # create visuals
-    # TODO: Below is an example - modify to create your own visuals
     graphs = [
+        #Graph 1 ####################################################################################
         {
+            'data': [
+                Pie(
+                    labels=genre_names,
+                    values=genre_counts,
+                    textinfo='label+percent',
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Message Genres',
+
+            }
+        },
+        #Graph 2 ####################################################################################
+        {
+            'data': [
+                Bar(
+                    x=cat_names,
+                    y=cat_counts
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of messages by category',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Categories",
+                    'categoryorder': "total descending"
+                }
+            }
+        },
+        #Graph 3 ####################################################################################
+        {
+            'data': [
+                Histogram(
+                    x=msg_lengths,
+                    xbins=dict(
+                        start=-0,
+                        end=500,
+                        size=5
+                    )
+                )
+            ],
+
+            'layout': {
+                'title': 'Histogram of message lengths',
+                'yaxis': {
+                    'title': "Counts"
+
+                },
+                'xaxis': {
+                    'title': "Value"
+                }
+            }
+        },
+        #Graph 4 ####################################################################################
+         {
             'data': [
                 Bar(
                     x=genre_names,
@@ -55,15 +122,15 @@ def index():
             ],
 
             'layout': {
-                'title': 'Distribution of Message Genres',
+                'title': 'Graph 4',
                 'yaxis': {
-                    'title': "Count"
+                    'title': "Y"
                 },
                 'xaxis': {
-                    'title': "Genre"
+                    'title': "X"
                 }
             }
-        }
+        },
     ]
 
     # encode plotly graphs in JSON
