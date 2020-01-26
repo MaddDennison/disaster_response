@@ -96,7 +96,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
     A list of the catagory names.
 
     Returns:
-    A list of the clean tokens.
+    None
     '''
 
     #train classifier
@@ -106,6 +106,12 @@ def evaluate_model(model, X_test, Y_test, category_names):
         print(category_names[i])
         print(classification_report(Y_test[i], Y_pred[i]))
 
+    parameters = {
+    'tfidf__use_idf': (True, False),
+     }
+    cv = GridSearchCV(pipeline, param_grid=parameters)
+    cv.fit(X,y)
+    printA(cv.grid_scores_)
 
 def save_model(model, model_filepath):
     '''
