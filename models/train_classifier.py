@@ -109,7 +109,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
     parameters = {
     'tfidf__use_idf': (True, False),
      }
-    cv = GridSearchCV(pipeline, param_grid=parameters)
+    cv = GridSearchCV(model, param_grid=parameters)
     cv.fit(X,y)
     printA(cv.grid_scores_)
 
